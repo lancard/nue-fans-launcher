@@ -1,6 +1,7 @@
 #!/bin/bash
 
 read -s -p "Password: " password
+echo ""
 
 docker run --rm \
 	-v $PWD/app:/app \
