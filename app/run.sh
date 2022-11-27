@@ -15,5 +15,6 @@ if [ "$1" == "build" ]; then
 	echo "Contents of config.xml:"
 	cat config.xml
 	cordova build --release -- --keystore=/keystore/worstrocker.keystore --storePassword=$KEYSTORE_PASSWORD --alias=worstrocker --password=$KEYSTORE_PASSWORD --packageType=bundle
+	cp /work/platforms/android/app/build/outputs/bundle/release/app-release.aab /app
 fi
 
