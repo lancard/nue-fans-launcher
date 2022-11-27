@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="data.js"></script>
+    <script src="leaflet/leaflet.js"></script>
+    <script src="leaflet/leaflet.textpath.js"></script>
+    <script src="jquery/jquery-3.6.1.min.js"></script>
+
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background-color: black;
+        }
+
+        .leaflet-container {
+            height: 400px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #map {
+            width: 100vw;
+            height: 80vh;
+        }
+
+        #menu,
+        #status {
+            height: 5vh;
+            line-height: 5vh;
+            color: white;
+        }
+
+        #log {
+            height: 5vh;
+            line-height: 5vh;
+            color: white;
+        }
+
+        .label-design {
+            font-size: 12px;
+            font-weight: bold;
+            -webkit-text-stroke: 1px blue;
+            background-color: transparent;
+            border: transparent;
+            box-shadow: none;
+        }
+    </style>
+    <script>
+        // load cordova script in cordova environment
+        if ('_cordovaNative' in window) {
+            var cordova = document.createElement('script');
+            cordova.async = false;
+            cordova.src = 'cordova/cordova.js';
+            document.head.appendChild(cordova);
+
+            var cordovaPlugin = document.createElement('script');
+            cordovaPlugin.async = false;
+            cordovaPlugin.src = 'cordova/cordova_plugin.js';
+            document.head.appendChild(cordovaPlugin);
+        }
+        try {
+            app.initialize();
+        }
+        catch (e) { }
+    </script>
+    <script>
+        function getIndicatedAltitude(mb, qnh) {
+            return 145366.45 * (Math.pow(qnh / 1013.25, 0.190284) - Math.pow(mb / 1013.25, 0.190284))
+        }
+
+        function onSuccess(values) {
+            const altitude = getIndicatedAltitude(values, 1023);
+            $("#status").text(`${altitude.toFixed(2)}ft(${(0.3048 * altitude).toFixed(2)}m) / ${gpsAltitude.toFixed(2)}m`);
+        };
+
+        function onError(error) {
+            // alert(JSON.stringify(error));
+            sensors.disableSensor();
+            sensors.enableSensor("PRESSURE");
+        };
+
+        document.addEventListener("deviceready", function () {
+            sensors.enableSensor("PRESSURE");
+
+            setInterval(function () { sensors.getState(onSuccess, onError) }, 1000);
+
+        }, false);
+    </script>
+</head>
+
+<body>
+    <div id="menu">
+        <a href="#" onclick="location.reload();">H</a>
+        Track:<select id="isTrack">
+            <option value="N">N</option>
+            <option value="Y">Y</option>
+        </select>
+        VATSIM:<input type="text" id="vatsimCallsign">
+    </div>
+
+    <div id="map"></div>
+
+    <div id="status"></div>
+
+    <script>
+        var map = null;
+        var currentLocationPopup = null;
+        const maxBounds = L.latLngBounds(L.latLng([38.85, 123.56280597193731]), L.latLng([29.85, 132.84627495139412]));
+        var gpsAltitude = 0;
+        var fixToCoordMap = {};
+        var airwayUsedFix = {};
+
+
+        function demo() {
+            var wind = L.polyline([[59.3556, -31.99219], [55.17887, -42.89062], [47.7541, -43.94531], [38.27269, -37.96875], [27.05913, -41.13281], [16.29905, -36.5625], [8.40717, -30.23437], [1.05463, -22.5], [-8.75479, -18.28125], [-21.61658, -20.03906], [-31.35364, -24.25781], [-39.90974, -30.9375], [-43.83453, -41.13281], [-47.7541, -49.92187], [-50.95843, -54.14062], [-55.9738, -56.60156]], {
+                weight: 15,
+                color: '#8EE9FF'
+            }).addTo(map);
+
+            wind.setText(') ', {
+                repeat: true,
+                offset: 7,
+                attributes: {
+                    fill: '#007DEF',
+                    'font-weight': 'bold',
+                    'font-size': '24'
+                }
+            });
+
+            var danger = L.polyline([[-40.311, -31.952], [-12.086, -18.727]], {
+                weight: 10,
+                color: 'orange',
+                opacity: 0.8
+            }).addTo(map);
+            danger.setText('\u25BA', {
+                repeat: true,
+                offset: 6,
+                attributes: { fill: 'red' }
+            });
+
+            var plane = L.polyline([[-49.38237, -37.26562], [-1.75754, -14.41406], [51.61802, -23.20312]], {
+                weight: 1,
+                color: 'black',
+                dashArray: '2, 2'
+            }).addTo(map);
+            plane.setText('\u2708     ', {
+                repeat: true,
+                offset: 8,
+                attributes: {
+                    'font-weight': 'bold',
+                    'font-size': '24'
+                }
+            });
+
+            var flightsWE = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "flight": "To New Delhi"
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    3.33984375,
+                                    46.6795944656402
+                                ],
+                                [
+                                    29.53125,
+                                    46.55886030311719
+                                ],
+                                [
+                                    51.328125,
+                                    42.293564192170095
+                                ],
+                                [
+                                    68.5546875,
+                                    35.746512259918504
+                                ],
+                                [
+                                    76.81640625,
+                                    28.65203063036226
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "flight": "To Hanoi"
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    77.607421875,
+                                    28.767659105691255
+                                ],
+                                [
+                                    88.72558593749999,
+                                    27.839076094777816
+                                ],
+                                [
+                                    97.3828125,
+                                    25.681137335685307
+                                ],
+                                [
+                                    105.77636718749999,
+                                    21.248422235627014
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            var flightsEW = {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "flight": "To Bangkok"
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": [
+                                [
+                                    106.67724609375,
+                                    10.790140750321738
+                                ],
+                                [
+                                    104.08447265624999,
+                                    11.523087506868514
+                                ],
+                                [
+                                    102.1728515625,
+                                    12.254127737657381
+                                ],
+                                [
+                                    100.45898437499999,
+                                    13.667338259654947
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            };
+
+            L.geoJson(flightsWE, {
+                onEachFeature: function (feature, layer) {
+                    layer.setText(feature.properties.flight, { offset: -5 });
+                },
+                style: {
+                    weight: 3,
+                    color: 'purple',
+                    dashArray: '4, 4'
+                }
+            }).addTo(map);
+
+            L.geoJson(flightsEW, {
+                onEachFeature: function (feature, layer) {
+                    layer.setText(feature.properties.flight, { offset: -5, orientation: 'flip' });
+                },
+                style: {
+                    weight: 3,
+                    color: 'purple',
+                    dashArray: '4, 4'
+                }
+            }).addTo(map);
+        }
+
+
+        map = L.map('map',
+            {
+                center: [37.55748666666666, 126.79195416666667],
+                zoom: 12,
+                maxBounds: maxBounds
+            }
+        );
+
+        // demo();
+
+        L.tileLayer('tiles/{z}/{x}/{y}.png', {
+            bounds: maxBounds,
+            maxNativeZoom: 13,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        fixes.forEach(element => {
+            fixToCoordMap[element.name] = element;
+        });
+
+        routes.forEach(element => {
+            var startFixCoord = fixToCoordMap[element[1]];
+            var endFixCoord = fixToCoordMap[element[2]];
+            var airwayName = element[0];
+
+            if (!startFixCoord || !endFixCoord)
+                return;
+
+            airwayUsedFix[element[1]] = true;
+            airwayUsedFix[element[2]] = true;
+
+            var lineOption = {
+                weight: 3,
+                color: 'black',
+                dashArray: '4, 10'
+            };
+
+            var textOption = {
+                center: true,
+                // repeat: true,
+                offset: 12,
+                attributes: {
+                    'font-weight': 'bold',
+                    'font-size': '12',
+                    'fill': 'black'
+                }
+            };
+
+            if (airwayName.indexOf("VFR") == 0) {
+                lineOption.weight = 1;
+                lineOption.color = 'purple';
+                textOption.attributes.fill = 'purple';
+            }
+            if (airwayName.indexOf("L") == 0 || airwayName.indexOf("Y") == 0 || airwayName.indexOf("Z") == 0) {
+                lineOption.color = 'blue';
+                textOption.attributes.fill = 'blue';
+            }
+
+            L.polyline([[startFixCoord.latitude, startFixCoord.longitude], [endFixCoord.latitude, endFixCoord.longitude]], lineOption)
+                .setText(airwayName, textOption)
+                .addTo(map);
+        })
+
+        for (var fix in airwayUsedFix) {
+            const element = fixToCoordMap[fix];
+
+            L.circle(L.latLng([element.latitude, element.longitude]), { radius: 100 })
+                .bindTooltip(`${element.name}`, { direction: "bottom", permanent: true, className: 'label-design' })
+                .addTo(map);
+        }
+
+        function updatePosition(latitude, longitude, radius) {
+
+            const lagLng = L.latLng([latitude, longitude]);
+
+            if (currentLocationPopup == null) {
+                currentLocationPopup = L.circle(lagLng, { radius, color: '#990000', stroke: 'red' })
+                    .bindTooltip(`${latitude}<br>${longitude}`, { direction: "bottom", permanent: true })
+                    .addTo(map);
+            }
+            else {
+                currentLocationPopup.setLatLng(lagLng).setTooltipContent(`${latitude}<br>${longitude}`).setRadius(radius);
+            }
+
+            if ($("#isTrack").val() == "Y") {
+                map.panTo([latitude, longitude], { animate: true });
+            }
+        }
+
+        function success(position) {
+            gpsAltitude = position.coords.altitude - geoidHeight[`${position.coords.latitude.toFixed(0)}/${position.coords.longitude.toFixed(0)}`];
+
+            $("#status").text(`${gpsAltitude.toFixed(2)}m`);
+
+            var callsign = $("#vatsimCallsign").val();
+
+            if (callsign != "")
+                return;
+
+            if (map == null)
+                return;
+
+            updatePosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy);
+        }
+
+        function error(err) {
+            console.error(`ERROR(${err.code}): ${err.message}`);
+        }
+
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 3000,
+            maximumAge: 0
+        };
+
+        var id = navigator.geolocation.watchPosition(success, error, options);
+
+        function updateVatsim() {
+            var callsign = $("#vatsimCallsign").val();
+
+            if (callsign == "")
+                return;
+
+            $.getJSON('../vatsim-data.json', function (ret) {
+                ret.pilots.forEach(element => {
+                    if (element.callsign != callsign)
+                        return;
+
+                    updatePosition(element.latitude, element.longitude, 100);
+                    return;
+                });
+            });
+        }
+
+        setInterval(updateVatsim, 5000);
+    </script>
+</body>
+
+</html>
