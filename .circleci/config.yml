@@ -7,5 +7,5 @@ jobs:
    steps:
      - checkout
      - run:
-          name: check ls
-          command: docker image ls
+          name: build debug apk
+          command: ./build_debug.sh
