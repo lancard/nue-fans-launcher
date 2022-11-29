@@ -8,6 +8,7 @@ fi
 if [ "$1" == "build" ]; then
 	cd /work
 	echo "Copying files..."
+	wget -O /work/www/index.html https://raw.githubusercontent.com/lancard/nue-fans/master/html/root/index.html
 	cp /app/* /work/ -R
 	cp config-template.xml config.xml
 	VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"`
@@ -21,6 +22,7 @@ fi
 if [ "$1" == "build_debug" ]; then
 	cd /work
 	echo "Copying files..."
+	wget -O /work/www/index.html https://raw.githubusercontent.com/lancard/nue-fans/master/html/root/index.html
 	cp /app/* /work/ -R
 	cp config-template.xml config.xml
 	VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"`
