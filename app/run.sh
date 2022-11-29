@@ -18,3 +18,15 @@ if [ "$1" == "build" ]; then
 	cp /work/platforms/android/app/build/outputs/bundle/release/app-release.aab /app
 fi
 
+if [ "$1" == "build_debug" ]; then
+	cd /work
+	echo "Copying files..."
+	cp /app/* /work/ -R
+	cp config-template.xml config.xml
+	VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"`
+	sed -i "s/\${VERSION_STRING}/$VERSION_STRING/g" config.xml
+	echo "Contents of config.xml:"
+	cat config.xml
+	cordova build
+	cp /work/platforms/android/app/build/outputs/apk/debug/app-debug.apk /app
+fi

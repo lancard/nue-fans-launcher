@@ -32,7 +32,7 @@ RUN cordova telemetry off
 RUN cordova create work
 WORKDIR /work
 RUN cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
-RUN cordova plugin add cordova plugin add cordova-plugin-downloader
+RUN cordova plugin add cordova-plugin-downloader
 RUN cordova platform add android@11.0.0
 RUN cordova build ; exit 0
 RUN cordova build
