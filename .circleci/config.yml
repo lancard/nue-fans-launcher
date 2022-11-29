@@ -1,0 +1,15 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: lancard/android:latest
+    steps:
+      - run:
+          name: "Say hello"
+          command: ls -alh
+
+workflows:
+  build-workflow:
+    jobs:
+      - build
