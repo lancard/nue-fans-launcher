@@ -3,7 +3,8 @@
     <name>Nue FANS</name>
     <description>Nue Flight Aviation Navigation System</description>
     <author email="worstrocker@hanmail.net" href="https://airplane.mywire.org">Sungho Kim</author>
-    <content src="gps.html" />
+
+    <content src="index.html" />
 
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
