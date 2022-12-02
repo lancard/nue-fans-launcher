@@ -27,16 +27,4 @@ ENV PATH="${PATH}:/gradle-7.5.1/bin:/cmdline-tools/bin"
 RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} --install "cmdline-tools;8.0"
 RUN yes | sdkmanager --sdk_root=${ANDROID_SDK_ROOT} "platform-tools" "build-tools;32.0.0"
 
-WORKDIR /
-RUN cordova telemetry off
-RUN cordova create work
-WORKDIR /work
-RUN cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
-RUN cordova plugin add cordova-plugin-file
-RUN cordova plugin add cordova-plugin-zip
-RUN cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git cordova-plugin-background-download
-RUN cordova platform add android@11.0.0
-RUN cordova build ; exit 0
-RUN cordova build
-
 ENTRYPOINT ["/app/run.sh"]

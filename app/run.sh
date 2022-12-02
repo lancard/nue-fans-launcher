@@ -6,7 +6,16 @@ if [ "$1" == "generate_keystore" ]; then
 fi
 
 if [ "$1" == "build" ]; then
+	cd /
+	cordova telemetry off
+	cordova create work
 	cd /work
+	cordova plugin add cordova-plugin-file
+	cordova plugin add cordova-plugin-zip
+	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
+	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git cordova-plugin-background-download
+	cordova platform add android@11.0.0
+	cordova build
 	echo "Copying files..."
 	wget -O /work/www/index.html https://raw.githubusercontent.com/lancard/nue-fans/master/root/index.html
 	cp /app/* /work/ -R
@@ -20,7 +29,16 @@ if [ "$1" == "build" ]; then
 fi
 
 if [ "$1" == "build_debug" ]; then
+	cd /
+	cordova telemetry off
+	cordova create work
 	cd /work
+	cordova plugin add cordova-plugin-file
+	cordova plugin add cordova-plugin-zip
+	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
+	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git cordova-plugin-background-download
+	cordova platform add android@11.0.0
+	cordova build
 	echo "Copying files..."
 	wget -O /work/www/index.html https://raw.githubusercontent.com/lancard/nue-fans/master/root/index.html
 	cp /app/* /work/ -R
