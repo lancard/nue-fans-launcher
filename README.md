@@ -1,2 +1,2 @@
-# android-build-docker
-범용 코도바 안드로이드 소스
+# nue-fans-launcher
+nue-fans 앱 런쳐
