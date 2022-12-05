@@ -18,6 +18,14 @@ jobs:
 
       - name: build debug apk
         run: ./build_debug.sh
+
+      - name: generate keystore from base64
+        run: |
+          mkdir keystore
+          echo "${{ secrets.KEYSTORE_FILE_BASE64 }}" | base64 --decode > keystore/worstrocker.keystore
+
+      - name: build release aab
+        run: ./build.sh ${{ secrets.KEYSTORE_FILE_PASSWORD }}
         
       - name: send debug apk via discord
         run: ./send_discord.sh
