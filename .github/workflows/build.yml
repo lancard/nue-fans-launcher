@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - run: echo $GITHUB_RUN_ATTEMPT
+      - run: echo $GITHUB_RUN_NUMBER
       
       - run: asfsafsaf
 
