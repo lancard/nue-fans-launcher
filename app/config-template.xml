@@ -2,7 +2,7 @@
 <widget id="com.github.lancard.nue_fans_launcher" version="${VERSION_STRING}" android-versionCode="${VERSION_CODE}" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Nue FANS</name>
     <description>Nue Flight Aviation Navigation System</description>
-    <author email="worstrocker@hanmail.net" href="https://airplane.mywire.org">Sungho Kim</author>
+    <author email="worstrocker@gmail.com" href="https://fans.mywire.org">Sungho Kim</author>
 
     <content src="index.html" />
 
