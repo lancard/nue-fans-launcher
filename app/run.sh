@@ -22,6 +22,7 @@ if [ "$1" == "build" ]; then
 	cp config-template.xml config.xml
 	VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"`
 	sed -i "s/\${VERSION_STRING}/$VERSION_STRING/g" config.xml
+	sed -i "s/\${VERSION_CODE}/$GITHUB_RUN_NUMBER/g" config.xml
 	echo "Contents of config.xml:"
 	cat config.xml
 	cordova build --release -- --keystore=/keystore/worstrocker.keystore --storePassword=$KEYSTORE_PASSWORD --alias=worstrocker --password=$KEYSTORE_PASSWORD --packageType=bundle
@@ -45,6 +46,7 @@ if [ "$1" == "build_debug" ]; then
 	cp config-template.xml config.xml
 	VERSION_STRING=`date +"1.%Y%m%d.1%H%M%S"`
 	sed -i "s/\${VERSION_STRING}/$VERSION_STRING/g" config.xml
+	sed -i "s/\${VERSION_CODE}/$GITHUB_RUN_NUMBER/g" config.xml
 	echo "Contents of config.xml:"
 	cat config.xml
 	cordova build
