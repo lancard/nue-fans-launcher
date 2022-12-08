@@ -16,10 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - run: echo $GITHUB_RUN_NUMBER
-      
-      - run: asfsafsaf
-
       - name: build debug apk
         run: ./build_debug.sh
 
