@@ -27,5 +27,5 @@ jobs:
       - name: build release aab
         run: ./build.sh ${{ secrets.KEYSTORE_FILE_PASSWORD }}
         
-      - name: send debug apk via discord
+      - name: send aab/apk via discord
         run: ./send_discord.sh
