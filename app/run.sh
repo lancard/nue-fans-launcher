@@ -8,7 +8,7 @@ fi
 if [ "$1" == "build" ]; then
 	cd /
 	cordova telemetry off
-	cordova create work
+	cordova create work com.github.lancard.nue_fans_launcher
 	cd /work
 	cordova plugin add cordova-plugin-file@7.0.0
 	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git cordova-plugin-zip
@@ -32,7 +32,7 @@ fi
 if [ "$1" == "build_debug" ]; then
 	cd /
 	cordova telemetry off
-	cordova create work
+	cordova create work com.github.lancard.nue_fans_launcher
 	cd /work
 	cordova plugin add cordova-plugin-file@7.0.0
 	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git cordova-plugin-zip
@@ -49,7 +49,6 @@ if [ "$1" == "build_debug" ]; then
 	sed -i "s/\${VERSION_CODE}/$GITHUB_RUN_NUMBER/g" config.xml
 	echo "Contents of config.xml:"
 	cat config.xml
- 	ls -alR .
 	cordova build
 	cp /work/platforms/android/app/build/outputs/apk/debug/app-debug.apk /app
 fi
