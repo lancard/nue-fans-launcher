@@ -34,6 +34,7 @@ if [ "$1" == "build_debug" ]; then
 	cordova telemetry off
 	cordova create work
 	cd /work
+ 	cordova build
 	cordova plugin add cordova-plugin-file@7.0.0
 	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git cordova-plugin-zip
 	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
