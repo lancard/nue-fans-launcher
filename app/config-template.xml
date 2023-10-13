@@ -10,4 +10,8 @@
     <allow-intent href="https://*/*" />
 
     <icon src="res/icon.png" />
+
+    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+        <application android:requestLegacyExternalStorage="true"/>
+    </edit-config>
 </widget>
