@@ -11,10 +11,10 @@ if [ "$1" == "build" ]; then
 	cordova create work com.github.lancard.nue_fans_launcher
 	cd /work
 	cordova plugin add cordova-plugin-file
-	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git cordova-plugin-zip
-	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
- 	cordova plugin add https://github.com/esri/cordova-plugin-advanced-geolocation.git
-	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git cordova-plugin-background-download
+	cordova plugin add cordova-plugin-geolocation
+	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git
+	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git
+ 	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git
 	cordova platform add android@12.0.1
 	cordova build
 	echo "Copying files..."
@@ -36,10 +36,10 @@ if [ "$1" == "build_debug" ]; then
 	cordova create work com.github.lancard.nue_fans_launcher
 	cd /work
 	cordova plugin add cordova-plugin-file
-	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git cordova-plugin-zip
-	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git cordova-plugin-geolocation
- 	cordova plugin add https://github.com/esri/cordova-plugin-advanced-geolocation.git
-	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git cordova-plugin-background-download
+	cordova plugin add cordova-plugin-geolocation
+	cordova plugin add https://github.com/bikubi/cordova-plugin-zip.git
+	cordova plugin add https://github.com/fabiorogeriosj/cordova-plugin-sensors.git
+	cordova plugin add https://github.com/lancard/cordova-plugin-background-download.git
 	cordova platform add android@12.0.1
 	cordova build
 	echo "Copying files..."
